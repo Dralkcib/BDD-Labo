@@ -26,20 +26,10 @@ namespace WPFClient
         private int _value = 0;
         public MainWindow()
         {
-            _customer = new Customer()
-            {
-                AccountBalance = 10,
-                Name = "Xavier",
-                AddressLine1 = "Rue du Lion",
-                Country = "Arlon",
-                Email = "DentaPansé@me.com",
-                id = 1,
-                Remark = "Attention il ne vous reste plus bcp de temps pour vous enregistrer !",
-                PostCode = "6700"
-            };
+            _customer = _context.Customers.First<Customer>();
 
             InitializeComponent();
-            this.Loaded += MainWindow_Loaded;
+            Loaded += MainWindow_Loaded;
         }
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -49,9 +39,9 @@ namespace WPFClient
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //Button.DataContextProperty = _value;
-            _customer.AccountBalance += 10000;
-            Formulaire.DataContext = _customer;
+            _context.Customers.First().AccountBalance += (double)MontantAAjouterAuCompte.Value;
+            
+            _context.SaveChanges();
         }
     }
 }
