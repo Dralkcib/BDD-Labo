@@ -16,7 +16,6 @@ namespace BankDAL
             using (SqlConnection cn = GetDatabaseConnection())
             {
                 cn.Open();
-                
                     try
                     {
                         DebiterDe(montantATransferer, ibanOrigine, cn);

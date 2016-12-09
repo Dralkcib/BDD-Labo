@@ -1,4 +1,4 @@
-﻿use [1617etu29251DB]
+﻿use [1617_etu29251_DB]
 CREATE TABLE [dbo].[CompteEnBanque] (
     [IBAN]  NVARCHAR (200)  NOT NULL,
     [Solde] DECIMAL (10, 2) NOT NULL,

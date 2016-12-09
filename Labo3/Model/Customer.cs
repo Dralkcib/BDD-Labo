@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,10 +15,12 @@ namespace Model
         public string City { get; set; }
         public string Country { get; set; }
         public string Email { get; set; }
-        public long id { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; }
         public string PostName { get; set; }
         public string Remark { get; set; }
         public string PostCode { get; set; }
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

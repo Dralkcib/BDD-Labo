@@ -1,5 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
+using System.Transactions;
 
 namespace BankDAL.Tests
 {
@@ -44,9 +46,21 @@ namespace BankDAL.Tests
             BankAccountManager manager = new BankAccountManager();
             try
             {
-                manager.TransfererArgent("BE68539007547034", "CetIBANNexistePas", 123);
+                using (TransactionScope transaction = new TransactionScope())
+                {
+
+                    manager.TransfererArgent("BE68539007547034", "CetIBANNexistePas", 123);
+                    transaction.Complete();
+                }
+                
             }
-            catch { }
+            catch(BankAccountNotFoundException e)
+            {
+                using (StreamWriter outputFile = new StreamWriter(@"F:\Mes documents\ECOLE\BDD\BDD-Labo\Labo2\BankDAL.Tests\errLogs.txt"))
+                {
+                    outputFile.WriteLine(e.Message);
+                }
+            }
             double soldeApresOperation = manager.ObtenirSolde("BE68539007547034");
             //le solde après opération doit être celui de départ, car l'opération de transfert n'a pas pu se produire
             //étant donné que le compte de destination n'existe pas.

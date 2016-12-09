@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using System.Data.Entity;
 
 namespace Labo1
 {
@@ -11,22 +12,33 @@ namespace Labo1
     {
         static void Main(string[] args)
         {
-            SqlConnection connection = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=BDD;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-            connection.Open();
-            SqlCommand command = new SqlCommand("SELECT s.Id as studentId s.FullName as studentName s.Birthday as birthday FROM Student", connection);
-            SqlDataReader reader = command.ExecuteReader();
-
-
-            while (reader.Read())
+            using (var db = new StudentDbEntities())
             {
-                var studentId = (int)reader("studentId");
-                Console.WriteLine(String.Format("{0}, {1}, {2}",
-                    reader[0], reader[1], reader[2]));
-                Console.WriteLine("Liste des cours:");
 
-            reader.Close();
-                connection.Close();
-            System.Console.Read();
+                // Display all Blogs from the database 
+                var query = from studentCourse in db.StudentCourses
+                            join student in db.Students on studentCourse.StudentId equals student.Id
+                            join course in db.Courses on studentCourse.CourseId equals course.Id
+                            select new {student, courseName = course.Description};
+                /*
+                var studentQuery = from student in db.Students
+                                   select student;*/
+
+                Console.WriteLine("All students in the database:");
+                string sauveNom = "";
+                foreach (var item in query)
+                {
+                     if(sauveNom != item.student.FullName)
+                    {
+                        Console.WriteLine(item.student.FullName + ", " + item.student.Birthday + ", " + item.student.Remark + ", Liste des cours :");
+                        sauveNom = item.student.FullName;
+                    }
+                    Console.WriteLine("\t"+item.courseName);
+                }
+
+                Console.WriteLine("Press any key to exit...");
+                Console.ReadKey();
+            }
         }
     }
 }
